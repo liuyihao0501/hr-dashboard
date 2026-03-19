@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年3月 人力分析看板 - 产品技术中心</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-title {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .card-subtitle {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+        .card.highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .card.highlight .card-title,
+        .card.highlight .card-value,
+        .card.highlight .card-subtitle {
+            color: white;
+        }
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .icon {
+            font-size: 1.5em;
+        }
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .insight-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .insight-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .insight-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .insight-item ul {
+            color: #666;
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        .risk-item {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .risk-item h4 {
+            color: #856404;
+        }
+        .optimize-item {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        .optimize-item h4 {
+            color: #155724;
+        }
+        .action-item {
+            background: #cce5ff;
+            border-left-color: #007bff;
+        }
+        .action-item h4 {
+            color: #004085;
+        }
+        .monitor-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .monitor-table th,
+        .monitor-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .monitor-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+        .monitor-table tr:hover {
+            background: #f5f5f5;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .status-normal {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2026年3月 人力分析看板</h1>
+            <div class="subtitle">产品技术中心 | 数据截止: 2026年3月31日</div>
+        </div>
+
+        <!-- 核心指标卡片 -->
+        <div class="dashboard">
+            <div class="card highlight">
+                <div class="card-title">总人数</div>
+                <div class="card-value">43</div>
+                <div class="card-subtitle">在职员工</div>
+            </div>
+            <div class="card">
+                <div class="card-title">集团编制占比</div>
+                <div class="card-value">18.6%</div>
+                <div class="card-subtitle">8人/43人</div>
+            </div>
+            <div class="card">
+                <div class="card-title">平均年龄</div>
+                <div class="card-value">31.2</div>
+                <div class="card-subtitle">岁 (范围: 24-44岁)</div>
+            </div>
+            <div class="card">
+                <div class="card-title">AI能力覆盖率</div>
+                <div class="card-value">0%</div>
+                <div class="card-subtitle">待完善数据</div>
+            </div>
+        </div>
+
+        <!-- 第一部分：人员结构分析 -->
+        <div class="section">
+            <h2 class="section-title"><span class="icon">📊</span> 人员结构分析</h2>
+            <div class="charts-row">
+                <div class="chart-container">
+                    <canvas id="teamChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="locationChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二部分：岗位与职级分布 -->
+        <div class="section">
+            <h2 class="section-title"><span class="icon">💼</span> 岗位与职级分布</h2>
+            <div class="charts-row">
+                <div class="chart-container">
+                    <canvas id="roleChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="levelChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三部分：洞察与建议 -->
+        <div class="section">
+            <h2 class="section-title"><span class="icon">💡</span> 核心洞察与建议</h2>
+            
+            <div class="insights-grid">
+                <!-- 亮点发现 -->
+                <div class="insight-item">
+                    <h4>🌟 亮点发现</h4>
+                    <ul>
+                        <li>团队年轻化，平均年龄31.2岁，活力充沛</li>
+                        <li>职级结构合理，2-2和2-3级别占51%，骨干力量充足</li>
+                        <li>三地均衡分布（成都17人、天津13人、北京13人）</li>
+                        <li>产品策划岗位占比最高（46.5%），产品驱动型团队</li>
+                    </ul>
+                </div>
+
+                <!-- 风险点 -->
+                <div class="insight-item risk-item">
+                    <h4>⚠️ 当前风险点</h4>
+                    <ul>
+                        <li><strong>AI能力档位数据缺失</strong>：全员AI能力档位为空，无法评估AI转型进度</li>
+                        <li><strong>人力成本数据未完善</strong>：成本表为示例数据，无法进行成本效益分析</li>
+                        <li><strong>项目归属数据缺失</strong>：队列字段为空，无法分析人力投入分布</li>
+                    </ul>
+                </div>
+
+                <!-- 优化空间 -->
+                <div class="insight-item optimize-item">
+                    <h4>📈 优化空间</h4>
+                    <ul>
+                        <li><strong>算法开发力量薄弱</strong>：仅1人，建议扩充至3-5人</li>
+                        <li><strong>高阶人才稀缺</strong>：4级以上仅3人（7%），需加强人才梯队建设</li>
+                        <li><strong>产品二组人数较少</strong>：仅4人，需评估是否需要调整</li>
+                    </ul>
+                </div>
+
+                <!-- 行动计划 -->
+                <div class="insight-item action-item">
+                    <h4>🎯 未来3个月优先行动</h4>
+                    <ul>
+                        <li><strong>完善AI能力评估</strong>：建立AI能力档位评定标准，完成全员评估</li>
+                        <li><strong>补充成本数据</strong>：建立人力成本核算体系，实现成本可视化</li>
+                        <li><strong>优化项目归属</strong>：明确项目队列归属，提升人力效能追踪</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第四部分：重点监控指标 -->
+        <div class="section">
+            <h2 class="section-title"><span class="icon">📋</span> 建议重点监控指标</h2>
+            <table class="monitor-table">
+                <thead>
+                    <tr>
+                        <th>指标名称</th>
+                        <th>定义</th>
+                        <th>计算公式</th>
+                        <th>本月基准值</th>
+                        <th>预警阈值</th>
+                        <th>下月目标</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>月度离职率</td>
+                        <td>当月离职人数/月初在职人数</td>
+                        <td>离职人数 ÷ 期初人数 × 100%</td>
+                        <td>0%</td>
+                        <td>&gt;5%</td>
+                        <td>&lt;2%</td>
+                    </tr>
+                    <tr>
+                        <td>月度入职率</td>
+                        <td>当月入职人数/月末在职人数</td>
+                        <td>入职人数 ÷ 期末人数 × 100%</td>
+                        <td>0%</td>
+                        <td>-</td>
+                        <td>按HC计划</td>
+                    </tr>
+                    <tr>
+                        <td>管理跨度</td>
+                        <td>每位管理者直接管理的下属数量</td>
+                        <td>下属总数 ÷ 管理者人数</td>
+                        <td>10.8</td>
+                        <td>&gt;15或&lt;5</td>
+                        <td>8-12</td>
+                    </tr>
+                    <tr>
+                        <td>集团编制占比</td>
+                        <td>集团编制人数占总人数比例</td>
+                        <td>集团编制人数 ÷ 总人数 × 100%</td>
+                        <td>18.6%</td>
+                        <td>&lt;10%</td>
+                        <td>15%-25%</td>
+                    </tr>
+                    <tr>
+                        <td>AI档位覆盖率</td>
+                        <td>已完成AI能力评定的人数占比</td>
+                        <td>已评定人数 ÷ 总人数 × 100%</td>
+                        <td>0%</td>
+                        <td>&lt;80%</td>
+                        <td>100%</td>
+                    </tr>
+                    <tr>
+                        <td>项目归属覆盖率</td>
+                        <td>已分配项目队列的人数占比</td>
+                        <td>已归属人数 ÷ 总人数 × 100%</td>
+                        <td>0%</td>
+                        <td>&lt;90%</td>
+                        <td>100%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>📅 数据更新周期：每月 | 下次更新：2026年4月 | 数据来源：人力资源系统</p>
+        </div>
+    </div>
+
+    <script>
+        // 团队分布图表
+        const teamCtx = document.getElementById('teamChart').getContext('2d');
+        new Chart(teamCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['工程组', '产品三组', '产品一组', '模型运营组', '产品二组', '算法开发组'],
+                datasets: [{
+                    data: [12, 10, 8, 7, 4, 1],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#f093fb',
+                        '#f5576c',
+                        '#4facfe',
+                        '#43e97b'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 15,
+                            font: { size: 12 }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: '团队分布',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                }
+            }
+        });
+
+        // 工作地分布图表
+        const locationCtx = document.getElementById('locationChart').getContext('2d');
+        new Chart(locationCtx, {
+            type: 'bar',
+            data: {
+                labels: ['成都', '天津', '北京'],
+                datasets: [{
+                    label: '人数',
+                    data: [17, 13, 13],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: '工作地分布',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 5 }
+                    }
+                }
+            }
+        });
+
+        // 角色分布图表
+        const roleCtx = document.getElementById('roleChart').getContext('2d');
+        new Chart(roleCtx, {
+            type: 'pie',
+            data: {
+                labels: ['产品', '开发', '运营', '项目经理', '中心负责人'],
+                datasets: [{
+                    data: [20, 11, 7, 4, 1],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#f093fb',
+                        '#f5576c',
+                        '#4facfe'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { padding: 15 }
+                    },
+                    title: {
+                        display: true,
+                        text: '角色分布',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                }
+            }
+        });
+
+        // 职级分布图表
+        const levelCtx = document.getElementById('levelChart').getContext('2d');
+        new Chart(levelCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1-2', '1-3', '2-1', '2-2', '2-3', '3-1', '3-2', '4-1', '4-2'],
+                datasets: [{
+                    label: '人数',
+                    data: [2, 2, 5, 12, 10, 4, 2, 2, 1],
+                    backgroundColor: '#667eea',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: '专业职级分布',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 2 }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
