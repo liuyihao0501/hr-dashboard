@@ -499,13 +499,13 @@
         <div class="dashboard">
             <div class="card highlight">
                 <div class="card-title">总人数</div>
-                <div class="card-value">43</div>
+                <div class="card-value">42</div>
                 <div class="card-subtitle">在职员工</div>
             </div>
             <div class="card">
                 <div class="card-title">集团编制占比</div>
-                <div class="card-value">18.6%</div>
-                <div class="card-subtitle">8人/43人</div>
+                <div class="card-value">16.7%</div>
+                <div class="card-subtitle">7人/42人</div>
             </div>
             <div class="card">
                 <div class="card-title">平均年龄</div>
@@ -546,7 +546,7 @@
                             <div class="ratio-info">
                                 <div class="ratio-label">产品</div>
                                 <div class="ratio-number">20人</div>
-                                <div class="ratio-percent">46.5%</div>
+                                <div class="ratio-percent">47.6%</div>
                             </div>
                         </div>
                         <div class="ratio-card dev">
@@ -554,15 +554,15 @@
                             <div class="ratio-info">
                                 <div class="ratio-label">研发</div>
                                 <div class="ratio-number">11人</div>
-                                <div class="ratio-percent">25.6%</div>
+                                <div class="ratio-percent">26.2%</div>
                             </div>
                         </div>
                         <div class="ratio-card ops">
                             <div class="ratio-icon">⚙️</div>
                             <div class="ratio-info">
                                 <div class="ratio-label">运营</div>
-                                <div class="ratio-number">7人</div>
-                                <div class="ratio-percent">16.3%</div>
+                                <div class="ratio-number">6人</div>
+                                <div class="ratio-percent">14.3%</div>
                             </div>
                         </div>
                         <div class="ratio-card other">
@@ -570,7 +570,7 @@
                             <div class="ratio-info">
                                 <div class="ratio-label">其他（管理）</div>
                                 <div class="ratio-number">5人</div>
-                                <div class="ratio-percent">11.6%</div>
+                                <div class="ratio-percent">11.9%</div>
                             </div>
                         </div>
                     </div>
@@ -933,16 +933,15 @@
         new Chart(teamCtx, {
             type: 'doughnut',
             data: {
-                labels: ['工程组(12人)', '产品三组(10人)', '产品一组(8人)', '模型运营组(7人)', '产品二组(4人)', '算法开发组(1人)'],
+                labels: ['工程组(12人)', '产品三组(10人)', '产品一组(8人)', '模型运营组(7人)', '产品二组(4人)'],
                 datasets: [{
-                    data: [12, 10, 8, 7, 4, 1],
+                    data: [12, 10, 8, 7, 4],
                     backgroundColor: [
                         '#667eea',
                         '#764ba2',
                         '#f093fb',
                         '#f5576c',
-                        '#4facfe',
-                        '#43e97b'
+                        '#4facfe'
                     ],
                     borderWidth: 0
                 }]
@@ -972,10 +971,10 @@
         new Chart(locationCtx, {
             type: 'bar',
             data: {
-                labels: ['成都(17人)', '天津(13人)', '北京(13人)'],
+                labels: ['北京(20人)', '天津(13人)', '成都(9人)'],
                 datasets: [{
                     label: '人数',
-                    data: [17, 13, 13],
+                    data: [20, 13, 9],
                     backgroundColor: ['#667eea', '#764ba2', '#f093fb'],
                     borderRadius: 8
                 }]
@@ -1005,9 +1004,9 @@
         new Chart(ratioCtx, {
             type: 'doughnut',
             data: {
-                labels: ['产品(20人)', '研发(11人)', '运营(7人)', '其他管理(5人)'],
+                labels: ['产品(20人)', '研发(11人)', '运营(6人)', '其他管理(5人)'],
                 datasets: [{
-                    data: [20, 11, 7, 5],
+                    data: [20, 11, 6, 5],
                     backgroundColor: [
                         '#667eea',
                         '#764ba2',
@@ -1045,9 +1044,9 @@
         new Chart(roleCtx, {
             type: 'pie',
             data: {
-                labels: ['产品(20人)', '开发(11人)', '运营(7人)', '项目经理(4人)', '中心负责人(1人)'],
+                labels: ['产品(20人)', '开发(11人)', '运营(6人)', '项目经理(4人)', '中心负责人(1人)'],
                 datasets: [{
-                    data: [20, 11, 7, 4, 1],
+                    data: [20, 11, 6, 4, 1],
                     backgroundColor: [
                         '#667eea',
                         '#764ba2',
@@ -1080,10 +1079,10 @@
         new Chart(levelCtx, {
             type: 'bar',
             data: {
-                labels: ['1-2(2人)', '1-3(2人)', '2-1(5人)', '2-2(12人)', '2-3(10人)', '3-1(4人)', '3-2(2人)', '4-1(2人)', '4-2(1人)'],
+                labels: ['1-2(2人)', '1-3(2人)', '2-1(5人)', '2-2(12人)', '2-3(10人)', '3-1(4人)', '3-2(2人)', '4-1(2人)'],
                 datasets: [{
                     label: '人数',
-                    data: [2, 2, 5, 12, 10, 4, 2, 2, 1],
+                    data: [2, 2, 5, 12, 10, 4, 2, 2],
                     backgroundColor: '#667eea',
                     borderRadius: 6
                 }]
